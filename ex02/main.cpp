@@ -54,13 +54,18 @@ int main(int ac, char* av[]) {
         }
         int intElement = static_cast<int>(longElement);
         intVec.push_back(intElement);
+
+        myMergeInsertionSort();
     }
 
+    //print size
+    std::cout<<<<"\n";
+
     // print vector
-    std::vector<int>::iterator it = intVec.begin();
-    for (;it < intVec.end(); it++) {
-        std::cout << *it << "\n";
-    }
+    // std::vector<int>::iterator it = intVec.begin();
+    // for (;it < intVec.end(); it++) {
+    //     std::cout << *it << "\n";
+    // }
 
     return 0;
 }
