@@ -12,7 +12,6 @@ void mySwap(std::vector<int>& intVec, size_t distance, size_t firstIndex, size_t
 std::vector<int> myMergeInsertionSort(std::vector<int>& vecToSort, size_t callNumber) {
 
     // std::vector<int> copy = vecToSort;
-    std::vector<int>::iterator it;
 
     // SORTING PART
         //   i < vec.size() because we compare elemnt at idx = i vs element at idx = i + 1
@@ -31,12 +30,28 @@ std::vector<int> myMergeInsertionSort(std::vector<int>& vecToSort, size_t callNu
     }
 
     // PRINTING CURRENT STATE
-    std::cout << "====================== AT ENTRY: " << callNumber << " =================\n";
-    it = vecToSort.begin();
+    std::size_t                 braceIndex = 1;
+    std::size_t                 vecSize = vecToSort.size();
+    std::vector<int>::iterator  it = vecToSort.begin();
+
+    std::cout << "====================== AT CALL NUMBER: " << callNumber << " =================\n";
     for (;it < vecToSort.end(); it++) {
-        std::cout << *it;
-        if (it < vecToSort.end() - 1)
+        if (braceIndex == 1) {
+            std::cout<<"[";
+        }
+        else if (braceIndex == vecSize) {
+            std::cout << ", " << *it;
+            std::cout<<"]";
+            break ;
+        }
+        else if (!((braceIndex - 1) % (distance * 2))) {
+            std::cout<<"] [";
+        }
+        else {
             std::cout<<", ";
+        }
+        std::cout << *it;
+        braceIndex++;
     }
     std::cout << "\n----------------------------------------------------\n\n";
 

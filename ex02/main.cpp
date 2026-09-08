@@ -56,6 +56,16 @@ int main(int ac, char* av[]) {
         intVec.push_back(intElement);
     }
 
+    // PRINTING INITIAL VECTOR STATE
+    std::vector<int>::iterator it = intVec.begin();
+    std::cout << "====================== INITIAL STATE =================\n";
+    for (;it < intVec.end(); it++) {
+        std::cout << *it;
+        if (it < intVec.end() - 1)
+            std::cout<<", ";
+    }
+    std::cout << "\n----------------------------------------------------\n\n";
+    // SORT VECTOR
     myMergeInsertionSort(intVec, 0);
 
     //print size
