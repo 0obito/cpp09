@@ -16,7 +16,7 @@ int main(int ac, char* av[]) {
     }
 
     size_t numOfElements = ac - 1;
-    std::cout<<"number of elements passed: "<<numOfElements<<std::endl;
+    std::cout<<"Number Of Passed Elements: "<<numOfElements<<"\n\n";
     std::vector<int> intVec;
     intVec.reserve(numOfElements);
 
@@ -54,12 +54,12 @@ int main(int ac, char* av[]) {
         }
         int intElement = static_cast<int>(longElement);
         intVec.push_back(intElement);
-
-        myMergeInsertionSort();
     }
 
+    myMergeInsertionSort(intVec, 0);
+
     //print size
-    std::cout<<<<"\n";
+    // std::cout<<"size = "<<intVec.size()<<"\n";
 
     // print vector
     // std::vector<int>::iterator it = intVec.begin();

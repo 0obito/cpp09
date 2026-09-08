@@ -1,18 +1,75 @@
 #include "PmergeMe.hpp"
 
-void myMergeInsertionSort(std::vector<int>& intVec) {
-    std::map<int, int> winnersAndLosers;
-    std::size_t i = 0;
-
-    std::vector<int>::iterator vecItBeg = intVec.begin();
-    std::vector<int>::iterator vecItEnd = intVec.end();
-    for (; vecItBeg < vecItEnd - 1; vecItBeg++) {
-        if (*vecItBeg > *(vecItBeg + 1)) {
-            winnersAndLosers[*vecItBeg] = *(vecItBeg + 1);
-        }
-        // but how about duplicates? I feel they could be a problem
-        else {
-            winnersAndLosers[*(vecItBeg + 1)] = *vecItBeg;
-        }
+void mySwap(std::vector<int>& intVec, size_t distance, size_t firstIndex, size_t secondIndex) {
+    for (size_t i = 0; i < distance; i++) {
+        int temp = intVec[firstIndex - i];
+        intVec[firstIndex - i] = intVec[secondIndex - i];
+        intVec[secondIndex - i] = temp;
     }
+}
+
+
+std::vector<int> myMergeInsertionSort(std::vector<int>& vecToSort, size_t callNumber) {
+
+    // std::vector<int> copy = vecToSort;
+    std::vector<int>::iterator it;
+
+    // SORTING PART
+        //   i < vec.size() because we compare elemnt at idx = i vs element at idx = i + 1
+        //     not sure the loop condition is correct for recursive calls, shall check it later
+
+    size_t distance = 1 << callNumber;              // the distance between elements to compare
+    size_t firstElementPos = distance;              //  at the start, the first element is located at distance
+    size_t firstIndex = firstElementPos - 1;        // 1st element index
+    size_t secondIndex = firstIndex + distance;     // 2nd element index
+    while (secondIndex < vecToSort.size()) {
+        if (vecToSort[firstIndex] > vecToSort[secondIndex]) {
+            mySwap(vecToSort, distance, firstIndex, secondIndex);
+        }
+        firstIndex += (distance * 2);
+        secondIndex += (distance * 2);
+    }
+
+    // PRINTING CURRENT STATE
+    std::cout << "====================== AT ENTRY: " << callNumber << " =================\n";
+    it = vecToSort.begin();
+    for (;it < vecToSort.end(); it++) {
+        std::cout << *it;
+        if (it < vecToSort.end() - 1)
+            std::cout<<", ";
+    }
+    std::cout << "\n----------------------------------------------------\n\n";
+
+    // RECURSIVE CALLS PART
+    if (distance * 4 <= vecToSort.size())
+        myMergeInsertionSort(vecToSort, callNumber + 1);
+
+
+
+    // // PRINTING PART (BEFORE AND AFTER)
+    // std::cout << "====================== AT ENTRY: " << callNumber << " =================\n";
+    // std::cout << "BEFORE:\n";
+    // it = copy.begin();
+    // for (;it < copy.end(); it++) {
+    //     std::cout << *it;
+    //     if (it < copy.end() - 1)
+    //         std::cout<<", ";
+    // }
+    // std::cout << "\n----------------------------------------------------\n";
+
+    // std::cout << "AFTER:\n";
+    // it = vecToSort.begin();
+    // for (;it < vecToSort.end(); it++) {
+    //     std::cout << *it;
+    //     if (it < vecToSort.end() - 1)
+    //         std::cout<<", ";
+    // }
+    // std::cout << "\n====================================================\n\n\n\n";
+
+    // REST OF ALGORITHM
+    // ...
+    // .....
+    // .......
+
+    return vecToSort;
 }
