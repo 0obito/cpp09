@@ -3,7 +3,11 @@
 #include <vector>
 #include <cerrno>
 #include <climits>
+#include <iomanip>
+#include <sys/time.h>
+#include <deque>
 #include "PmergeMe.hpp"
+#define MAX_ELEMENTS 100000
 
 int main(int ac, char* av[]) {
     if (ac <= 1) {
@@ -16,9 +20,15 @@ int main(int ac, char* av[]) {
     }
 
     size_t numOfElements = ac - 1;
-    std::cout<<"Number Of Passed Elements: "<<numOfElements<<"\n\n";
+    if (numOfElements > MAX_ELEMENTS) {
+        std::cerr<<"Error: too many numbers.\n";
+        std::cout<<"Note: since the subject demands a minimum of 3000 numbers, and to avoid any issues with the program, the maximum number of elements you can pass is " << MAX_ELEMENTS << "\n";
+        return 1;
+    }
+
     std::vector<int> intVec;
     intVec.reserve(numOfElements);
+    std::deque<int> intDeq;
 
     char* endPtr;
     errno = 0;
@@ -54,28 +64,39 @@ int main(int ac, char* av[]) {
         }
         int intElement = static_cast<int>(longElement);
         intVec.push_back(intElement);
+        intDeq.push_back(intElement);
     }
 
-    // PRINTING INITIAL VECTOR STATE
-    std::vector<int>::iterator it = intVec.begin();
-    std::cout << "====================== INITIAL STATE =================\n";
-    for (;it < intVec.end(); it++) {
-        std::cout << *it;
-        if (it < intVec.end() - 1)
-            std::cout<<", ";
-    }
-    std::cout << "\n----------------------------------------------------\n\n";
-    // SORT VECTOR
-    myMergeInsertionSort(intVec, 0);
+    std::cout << "Before:  ";
+    printVec(intVec);
 
-    //print size
-    // std::cout<<"size = "<<intVec.size()<<"\n";
+    // clock_t vecStartTime = clock();
+    // myMergeInsertionSort(intVec, 0, numOfElements);
+    // clock_t vecEndTime = clock();
+    // double  vecTime = static_cast<double>(vecEndTime - vecStartTime) / CLOCKS_PER_SEC * 1000000.0;
 
-    // print vector
-    // std::vector<int>::iterator it = intVec.begin();
-    // for (;it < intVec.end(); it++) {
-    //     std::cout << *it << "\n";
-    // }
+    // clock_t deqStartTime = clock();
+    // myMergeInsertionSort(intDeq, 0, numOfElements);
+    // clock_t deqEndTime = clock();
+    // double  deqTime = static_cast<double>(deqEndTime - deqStartTime) / CLOCKS_PER_SEC * 1000000.0;
 
+    struct timeval vecStartTime, vecEndTime, deqStartTime, deqEndTime;
+
+    gettimeofday(&vecStartTime, NULL);
+    myMergeInsertionSort(intVec, 0, numOfElements);
+    gettimeofday(&vecEndTime, NULL);
+    double vecTime = (vecEndTime.tv_sec - vecStartTime.tv_sec) * 1000000.0 + (vecEndTime.tv_usec - vecStartTime.tv_usec);
+
+    gettimeofday(&deqStartTime, NULL);
+    myMergeInsertionSort(intDeq, 0, numOfElements);
+    gettimeofday(&deqEndTime, NULL);
+    double deqTime = (deqEndTime.tv_sec - deqStartTime.tv_sec) * 1000000.0 + (deqEndTime.tv_usec - deqStartTime.tv_usec);
+
+    std::cout << "After:  ";
+    printVec(intVec);
+
+    std::cout << std::fixed << std::setprecision(5);
+    std::cout << "Time to process a range of " << numOfElements << " elements with std::vector : " << vecTime << " us\n";
+    std::cout << "Time to process a range of " << numOfElements << " elements with std::deque : " << deqTime << " us\n";
     return 0;
 }
